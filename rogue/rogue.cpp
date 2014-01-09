@@ -19,9 +19,24 @@ namespace rogue {
     this->character = character;
   }
   
-  Object::Object (int x, int y) {
+  void Symbol::draw () {
+	cout << "\33[3";
+	cout << foreground;
+	cout << "m";
+	cout << "\33[4";
+	cout << background;
+	cout << "m";
+	cout << character;
+  }
+  
+  Object::Object (int x, int y, Type type) {
     this->x = x;
     this->y = y;
+    this->type = type;
+  }
+  
+  Type Object::objectType () {
+	return this->type;
   }
   
   Map::Map (int w, int h):
@@ -39,5 +54,19 @@ namespace rogue {
     for (int i=0;i<h;i++)
       delete[] data[i];
     delete[] data;
+  }
+  
+  void Map::draw () {
+	int x,y;
+	for (y=0;y<h;y++) {
+		for (x=0;x<w;x++) {
+			if (data[y][x].size() > 0) {
+				data[y][x].back()->symbol().draw();
+			} else {
+				cout << " ";
+			} 
+		}
+		cout << endl;
+	}
   }
 }
