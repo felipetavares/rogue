@@ -2,6 +2,7 @@
 #define ROGUE_H
 
 #include <vector>
+#include <iostream>
 using namespace std;
 
 namespace rogue {
@@ -14,25 +15,28 @@ namespace rogue {
   public:
     Color foreground;
     Color background;
-    wchar_t character;  
+    char character;  
     
     Symbol();
-    Symbol(Color,wchar_t);
-    Symbol(Color,Color,wchar_t);
+    Symbol(Color,char);
+    Symbol(Color,Color,char);
+    void draw();
   };
   
   class Object {
+  public:
+    enum Type {tWall};
+  private:
     int x,y;
     Type type;
   public:
-    enum Type {};
-    Object (int,int);
+    Object (int,int,Type);
+    Type objectType ();
     
     virtual void think () {};
     virtual Symbol symbol () {};
     virtual State state () {};
     virtual void onMove (Map&, int, int) {};
-    virtual Type objectType ();
 };
   
   class Map {
@@ -40,7 +44,15 @@ namespace rogue {
     vector <Object*> **data;
   public:
     Map(int,int);
+    void draw();
     ~Map();
+  };
+
+  class Wall: public Object {
+  public:
+    Wall (int x, int y):
+      Object(x,y,Object::tWall) {
+    }
   };
 }
 
