@@ -1,72 +1,51 @@
-#include "rogue.hpp"
+#ifndef ROGUE_H
+#define ROGUE_H
+
+#include <vector>
+using namespace std;
 
 namespace rogue {
-  // Init a symbol
-  Symbol::Symbol () {
-    foreground = White;
-    background = Black;
-    character = ' ';
-  }
+  enum Color {Black,Red,Green,Yellow,Blue,Magneta,Cyan,White};
+  enum State {Gas,Liquid,Solid};
+
+  class Map;
   
-  Symbol::Symbol (Color foreground, wchar_t character) {
-    this->foreground = foreground;
-    this->character = character;
-  }
-  
-  Symbol::Symbol (Color foreground, Color background, wchar_t character) {
-    this->foreground = foreground;
-    this->background = background;
-    this->character = character;
-  }
-  
-  void Symbol::draw () {
-	cout << "\33[3";
-	cout << foreground;
-	cout << "m";
-	cout << "\33[4";
-	cout << background;
-	cout << "m";
-	cout << character;
-  }
-  
-  Object::Object (int x, int y, Type type) {
-    this->x = x;
-    this->y = y;
-    this->type = type;
-  }
-  
-  Type Object::objectType () {
-	return this->type;
-  }
-  
-  Map::Map (int w, int h):
-    data(NULL) {
-    this->w = w;
-    this->h = h;
+  class Symbol {
+  public:
+    Color foreground;
+    Color background;
+    wchar_t character;  
     
-    data = new vector <Object*>*[h];
-    for (int i=0;i<h;i++) {
-      data[i] = new vector <Object*>[w];
-    }
-  }
+    Symbol();
+    Symbol(Color,wchar_t);
+    Symbol(Color,Color,wchar_t);
+    void draw ();
+  };
   
-  Map::~Map () {
-    for (int i=0;i<h;i++)
-      delete[] data[i];
-    delete[] data;
-  }
+  class Object {
+    int x,y;
+    Type type;
+  public:
+    enum Type {};
+    Object (int,int);
+    Type objectType ();
+    
+    virtual void think () {};
+    virtual Symbol symbol () {};
+    virtual State state () {};
+    virtual void onMove (Map&, int, int) {};
+};
   
-  void Map::draw () {
-	int x,y;
-	for (y=0;y<h;y++) {
-		for (x=0;x<w;x++) {
-			if (data[y][x].size() > 0) {
-				data[y][x].back()->symbol().draw();
-			} else {
-				cout << " ";
-			} 
-		}
-		cout << endl;
-	}
-  }
+  class Map {
+    int w,h;
+    vector <Object*> **data;
+  public:
+    Map(int,int);
+    ~Map();
+    
+    void draw ();
+  };
 }
+
+#endif /* ROGUE_H */
+  
