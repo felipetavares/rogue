@@ -6,14 +6,14 @@ using namespace std;
 class Wall: public Object {
 public:
   Wall (int x, int y):
-    Object(x,y) {
+    Object(x,y,tWall) {
   }
 };
 
 int main (void) {
-  Object* wall = new Wall(0,0);
-
-  cout << typeid(wall).name() << endl;
+  Map map = Map(8,8);
+  
+  map.draw();
 
   return 0;
 }
