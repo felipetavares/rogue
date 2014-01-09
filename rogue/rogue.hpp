@@ -23,14 +23,17 @@ namespace rogue {
   
   class Object {
     int x,y;
+    Type type;
   public:
+    enum Type {};
     Object (int,int);
     
     virtual void think () {};
     virtual Symbol symbol () {};
     virtual State state () {};
     virtual void onMove (Map&, int, int) {};
-  };
+    virtual Type objectType ();
+};
   
   class Map {
     int w,h;
