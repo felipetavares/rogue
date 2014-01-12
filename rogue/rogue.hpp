@@ -2,12 +2,13 @@
 #define ROGUE_H
 
 #include <vector>
+#include <string>
 #include <iostream>
 using namespace std;
 
 namespace rogue {
-  enum Color {Black,Red,Green,Yellow,Blue,Magneta,Cyan,White};
-  enum State {Gas,Liquid,Solid};
+  enum Color {Black=0,Red=1,Green=2,Yellow=3,Blue=4,Magneta=5,Cyan=6,White=7};
+  enum State {Gas=0,Liquid,Solid};
 
   class Map;
   
@@ -15,11 +16,11 @@ namespace rogue {
   public:
     Color foreground;
     Color background;
-    char character;  
+    string character;  
     
     Symbol();
-    Symbol(Color,char);
-    Symbol(Color,Color,char);
+    Symbol(Color,string);
+    Symbol(Color,Color,string);
     void draw();
   };
   
@@ -36,25 +37,19 @@ namespace rogue {
     virtual void think () {};
     virtual Symbol symbol () {};
     virtual State state () {};
-    virtual void onMove (Map&, int, int) {};
+    virtual void move (Map&, int, int);
 };
   
   class Map {
     int w,h;
+  public:
     vector <Object*> **data;
   public:
     Map(int,int);
-    void draw();
     ~Map();
-  };
-
-  class Wall: public Object {
-  public:
-    Wall (int x, int y):
-      Object(x,y,Object::tWall) {
-    }
+    void draw();
+    bool inside(int,int);
   };
 }
 
 #endif /* ROGUE_H */
-  

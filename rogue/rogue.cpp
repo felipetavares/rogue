@@ -1,19 +1,22 @@
+#include <algorithm>
 #include "rogue.hpp"
+#include "objects/wall.hpp"
 
 namespace rogue {
   // Init a symbol
   Symbol::Symbol () {
     foreground = White;
-    background = Red;
+    background = Black;
     character = ' ';
   }
   
-  Symbol::Symbol (Color foreground, char character) {
+  Symbol::Symbol (Color foreground, string character) {
     this->foreground = foreground;
+    this->background = Black;
     this->character = character;
   }
   
-  Symbol::Symbol (Color foreground, Color background, char character) {
+  Symbol::Symbol (Color foreground, Color background, string character) {
     this->foreground = foreground;
     this->background = background;
     this->character = character;
@@ -21,10 +24,10 @@ namespace rogue {
   
   void Symbol::draw () {
     cout << "\33[3";
-    cout << (int)foreground;
+    cout << foreground;
     cout << "m";
     cout << "\33[4";
-    cout << (int)background;
+    cout << background;
     cout << "m";
     cout << character;
     cout << "\33[0m";
@@ -37,7 +40,18 @@ namespace rogue {
   }
   
   Object::Type Object::objectType () {
-	return this->type;
+    return this->type;
+  }
+
+
+  void Object::move (Map& map, int dx, int dy) {
+    vector <Object*> &v = map.data[y][x];
+    v.erase(remove(v.begin(), v.end(), this), v.end());    
+    if (map.inside(dx,dy)) {
+      map.data[dy][dx].push_back(this);
+      x = dx;
+      y = dy;
+    }
   }
   
   Map::Map (int w, int h):
@@ -48,7 +62,22 @@ namespace rogue {
     data = new vector <Object*>*[h];
     for (int i=0;i<h;i++) {
       data[i] = new vector <Object*>[w];
-      data[i][0].push_back(new Wall(0,i));
+      for (int j=0;j<w;j++) {
+	bool hasdir = false;
+	Wall::Direction dir;
+	
+	if (i == 0 || i == h-1) {
+	  dir = Wall::Horizontal;
+	  hasdir = true;
+	}
+	else if (j == 0 || j == w-1) {
+	  dir = Wall::Vertical;
+	  hasdir = true;
+	}
+
+	if (hasdir)
+	  data[i][j].push_back(new Wall(j,i,dir));
+      }
     }
   }
   
@@ -70,5 +99,12 @@ namespace rogue {
       }
       cout << endl;
     }
+  }
+
+  bool Map::inside (int x, int y) {
+    if (x >= 0 && y >= 0 &&
+	x < w  && y < h)
+      return true;
+    return false;
   }
 }

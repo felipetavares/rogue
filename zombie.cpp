@@ -1,5 +1,6 @@
 #include <iostream>
 #include "rogue/rogue.hpp"
+#include "rogue/objects/wall.hpp"
 using namespace rogue;
 using namespace std;
 
