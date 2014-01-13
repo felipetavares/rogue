@@ -33,16 +33,15 @@ namespace rogue {
     cout << "\33[0m";
   }
   
-  Object::Object (int x, int y, Type type) {
-    this->x = x;
-    this->y = y;
+  Object::Object (Map& map,int x, int y, Type type, string name) {
     this->type = type;
+    this->name = name;
+    move(map, x, y);
   }
   
   Object::Type Object::objectType () {
     return this->type;
   }
-
 
   void Object::move (Map& map, int dx, int dy) {
     vector <Object*> &v = map.data[y][x];
@@ -52,6 +51,18 @@ namespace rogue {
       x = dx;
       y = dy;
     }
+  }
+
+  void Object::completeDescription () {
+    cout << name << endl;
+  }
+
+  int Object::getX() {
+    return x;
+  }
+
+  int Object::getY() {
+    return y;
   }
   
   Map::Map (int w, int h):
@@ -76,7 +87,7 @@ namespace rogue {
 	}
 
 	if (hasdir)
-	  data[i][j].push_back(new Wall(j,i,dir));
+	  new Wall(*this,j,i,dir);
       }
     }
   }
@@ -94,10 +105,16 @@ namespace rogue {
 	if (data[y][x].size() > 0) {
 	  data[y][x].back()->symbol().draw();
 	} else {
-	  cout << " ";
+	  Symbol(White," ").draw();
 	} 
       }
       cout << endl;
+    }
+  }
+
+  vector <Object*> Map::at (Object *o) {
+    if (inside (o->getX(), o->getY())) {
+      return data[o->getY()][o->getX()];
     }
   }
 

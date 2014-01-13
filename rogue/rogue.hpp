@@ -26,14 +26,18 @@ namespace rogue {
   
   class Object {
   public:
-    enum Type {tWall};
+    enum Type {tWall,tPlayer,tDoor};
   private:
     int x,y;
     Type type;
+    string name;
   public:
-    Object (int,int,Type);
+    Object (Map&,int,int,Type,string);
     Type objectType ();
-    
+    int getX();
+    int getY();
+    void completeDescription();
+
     virtual void think () {};
     virtual Symbol symbol () {};
     virtual State state () {};
@@ -49,6 +53,7 @@ namespace rogue {
     ~Map();
     void draw();
     bool inside(int,int);
+    vector <Object*> at (Object*);
   };
 }
 
