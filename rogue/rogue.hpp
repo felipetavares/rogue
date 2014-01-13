@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace rogue {
-  enum Color {Black=0,Red=1,Green=2,Yellow=3,Blue=4,Magneta=5,Cyan=6,White=7};
+  enum Color {Black=0,Red,Green,Yellow,Blue,Magneta,Cyan,White};
   enum State {Gas=0,Liquid,Solid};
 
   class Map;
@@ -26,7 +26,7 @@ namespace rogue {
   
   class Object {
   public:
-    enum Type {tWall,tPlayer,tDoor};
+    enum Type {tWall,tPlayer,tDoor,tApple};
   private:
     int x,y;
     Type type;

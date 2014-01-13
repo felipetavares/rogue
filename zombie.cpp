@@ -7,6 +7,7 @@
 #include "rogue/objects/wall.hpp"
 #include "rogue/objects/player.hpp"
 #include "rogue/objects/door.hpp"
+#include "rogue/objects/apple.hpp"
 using namespace rogue;
 using namespace std;
 
@@ -30,23 +31,54 @@ void restoreStdin () {
 }
 
 void clearScreen () {
+    cout << "\33[0;0f";
     cout << "\33[2J";
+}
+
+template <class Pickuper, class Obj>
+void pickup (Map& map, Pickuper *p, vector<Obj*> objs) {
+  int i;
+  for (i=0;i<objs.size();i++) {
+    Obj* o = objs[i];
+    if (o->objectType() != Object::tPlayer) {
+      cout << "Piking up ";
+      o->completeDescription();
+      cin.ignore(1);
+
+      vector <Object*> &v = map.data[o->getY()][o->getX()];
+      v.erase(remove(v.begin(), v.end(), o), v.end());  
+      p->pickup(o);
+    }
+  }
+}
+
+template <class Dropper>
+void drop (Map& map, Dropper *d) {
+  vector <Object*> &v = map.data[d->getY()][d->getX()];
+  auto elements = d->drop();
+
+  v.insert(v.end(), elements.begin(), elements.end());
 }
 
 int main (void) {
   Map map = Map(8,8);
   Player *player = new Player (map, 1,1);
-  new Door(map, 3,3, Door::Vertical);
+  Object *door = new Door(map, 3,3, Door::Vertical);
+  Object *apple = new Apple(map, 5,5);
 
   nonCanonicalStdin();
   while (1) {
     clearScreen();
 
     map.draw();
+    
     vector <Object*> what = map.at(player);
     for_each (what.begin(),what.end(), [] (Object* o) {
-	o->completeDescription();
-      });
+      if (o->objectType() != Object::tPlayer)
+        o->completeDescription();
+    });
+
+    player->displayInventory();
 
     char c;
     cin >> c;
@@ -59,6 +91,10 @@ int main (void) {
       player->move(map, player->getX()-1, player->getY());
     if (c == 'l')
       player->move(map, player->getX()+1, player->getY());
+    if (c == 'p')
+        pickup <Player,Object> (map, player, map.at(player));
+    if (c == 'd')
+        drop <Player> (map, player);
 
     if (c == 'q')
       break;
