@@ -112,7 +112,7 @@ namespace rogue {
     }
   }
 
-  vector <Object*> Map::at (Object *o) {
+  vector <Object*> &Map::at (Object *o) {
     if (inside (o->getX(), o->getY())) {
       return data[o->getY()][o->getX()];
     }

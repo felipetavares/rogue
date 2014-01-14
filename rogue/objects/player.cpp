@@ -37,6 +37,7 @@ namespace rogue {
   }
 
   void Player::displayInventory () {
+    cout << "[INVENTORY]" << endl;
     for_each (inventory.begin(), inventory.end(), [] (Object* o) {
       o->completeDescription();
     });

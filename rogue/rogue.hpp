@@ -53,7 +53,7 @@ namespace rogue {
     ~Map();
     void draw();
     bool inside(int,int);
-    vector <Object*> at (Object*);
+    vector <Object*> &at (Object*);
   };
 }
 

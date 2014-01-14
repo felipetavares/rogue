@@ -36,18 +36,14 @@ void clearScreen () {
 }
 
 template <class Pickuper, class Obj>
-void pickup (Map& map, Pickuper *p, vector<Obj*> objs) {
+void pickup (Map& map, Pickuper *p, vector<Obj*> &objs) {
   int i;
   for (i=0;i<objs.size();i++) {
     Obj* o = objs[i];
     if (o->objectType() != Object::tPlayer) {
-      cout << "Piking up ";
-      o->completeDescription();
-      cin.ignore(1);
-
-      vector <Object*> &v = map.data[o->getY()][o->getX()];
-      v.erase(remove(v.begin(), v.end(), o), v.end());  
+      objs.erase(objs.begin()+i);
       p->pickup(o);
+      i--;
     }
   }
 }
@@ -57,7 +53,7 @@ void drop (Map& map, Dropper *d) {
   vector <Object*> &v = map.data[d->getY()][d->getX()];
   auto elements = d->drop();
 
-  v.insert(v.end(), elements.begin(), elements.end());
+  v.insert(v.end()-1, elements.begin(), elements.end());
 }
 
 int main (void) {
@@ -72,7 +68,8 @@ int main (void) {
 
     map.draw();
     
-    vector <Object*> what = map.at(player);
+    cout << "[MAP]" << endl;
+    vector <Object*> &what = map.at(player);
     for_each (what.begin(),what.end(), [] (Object* o) {
       if (o->objectType() != Object::tPlayer)
         o->completeDescription();
