@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "properties/properties.hpp"
 using namespace std;
 
 namespace rogue {
@@ -31,6 +32,7 @@ namespace rogue {
     int x,y;
     Type type;
     string name;
+    vector <Propertie> properties;
   public:
     Object (Map&,int,int,Type,string);
     Type objectType ();

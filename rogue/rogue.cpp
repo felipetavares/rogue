@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "rogue.hpp"
 #include "objects/wall.hpp"
+#include "properties/properties.hpp"
 
 namespace rogue {
   // Init a symbol
@@ -21,7 +22,7 @@ namespace rogue {
     this->background = background;
     this->character = character;
   }
-  
+
   void Symbol::draw () {
     cout << "\33[3";
     cout << foreground;
