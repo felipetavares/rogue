@@ -27,8 +27,9 @@ namespace rogue {
   
   class Object {
   public:
-    enum Type {tWall,tPlayer,tDoor,tApple};
-  private:
+    enum Type {tWall,tPlayer,tDoor,tApple,tGrass,tWater};
+    enum Action {aOpen,aClose};
+  protected:
     int x,y;
     Type type;
     string name;
@@ -40,22 +41,36 @@ namespace rogue {
     int getY();
     void completeDescription();
 
+    string getName();
+
     virtual void think () {};
     virtual Symbol symbol () {};
     virtual State state () {};
-    virtual void move (Map&, int, int);
-};
+    virtual float weight() = 0;
+    virtual void move (Map&, int, int, bool=false);
+    virtual bool action (Map&, Action) {return false;};
+    virtual bool canPickup (Object*) {return true;};
+    virtual bool isComestible () {return false;};
+    virtual float nutritionValue() {return 0;};
+  };
   
   class Map {
     int w,h;
+    string name;
+    Object* player;
+    vector <Object*> vnull;
   public:
     vector <Object*> **data;
   public:
-    Map(int,int);
+    Map(string);
+    Map(int,int,string);
     ~Map();
     void draw();
     bool inside(int,int);
     vector <Object*> &at (Object*);
+    vector <Object*> &at (int,int);
+    string getName();
+    Object *getPlayer();
   };
 }
 

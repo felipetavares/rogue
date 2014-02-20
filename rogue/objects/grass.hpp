@@ -1,10 +1,10 @@
 namespace rogue {
-  class Wall: public Object {
+  class Grass: public Object {
   public: enum Direction  {Vertical, Horizontal};
   private:
     Direction dir;
   public:
-    Wall (Map&, int, int, char);
+    Grass (Map&, int, int);
     Symbol symbol();
     State state();
   	float weight();

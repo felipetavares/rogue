@@ -5,8 +5,10 @@ namespace rogue {
     Direction dir;
     bool open;
   public:
-    Door (Map&, int, int, Direction);
+    Door (Map&, int, int, char);
     Symbol symbol();
     State state();
+    bool action(Map&,Action);
+    float weight ();
   };
 }

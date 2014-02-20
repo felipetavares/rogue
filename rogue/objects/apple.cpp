@@ -13,4 +13,17 @@ namespace rogue {
   State Apple::state () {
     return Gas;
   }
+
+  float Apple::weight () {
+  	// 80 g
+  	return 0.08;
+  }
+
+  bool Apple::isComestible() {
+    return true;
+  }
+
+  float Apple::nutritionValue() {
+    return 50;
+  }
 }

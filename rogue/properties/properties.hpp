@@ -5,6 +5,8 @@
 using namespace std;
 
 namespace rogue {
+	class Object;
+
 	class Propertie {
 	public:
 		// This returns the name of this propertie, for an given object
