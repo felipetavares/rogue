@@ -14,6 +14,8 @@ namespace rogue {
 
 			static void blit (CharBuf&,CharBuf&,
 							  int, int);
+			static CharBuf subtract (CharBuf&,CharBuf&);
+			static void copy (CharBuf&,CharBuf&);
 
 			void updateSize(int,int);
 			string getCharAt(int,int);
@@ -25,12 +27,14 @@ namespace rogue {
 			bool inside(int);
 
 			void render();
+			void economicRender();
 		};
 
 		class Display {
 			struct termios prevAttr;
 			int width,height;
 			CharBuf screen;
+			CharBuf backScreen;
 		public:
 			Display();
 			~Display();

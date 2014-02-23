@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include "rogue/rogue.hpp"
+#include "rogue/interface.hpp"
 #include "rogue/objects/wall.hpp"
 #include "rogue/objects/player.hpp"
 #include "rogue/objects/door.hpp"
@@ -265,6 +266,9 @@ int main (void) {
   cout << "\33\133\77" << "1049l";
 
   cout << endl;
+
+  interface::Display disp = interface::Display();
+  disp.draw();
 
   return 0;
 }

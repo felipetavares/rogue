@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <cstring>
@@ -75,6 +76,16 @@ namespace rogue {
 			}
 		}
 
+		void CharBuf::economicRender () {
+			for (int y=0;y<height;y++)
+				for (int x=0;x<width;x++)
+					if (getCharAt(x,y) != "") {
+						// Move to the character position
+						cout << "\33[" << y+1 << ";" << x+1 << "H";
+						cout << getCharAt(x,y);
+					}
+		}
+
 		void CharBuf::blit (CharBuf& to, CharBuf& from, int x, int y) {
 			int f = 0;
 			int t = to.width*y+x;
@@ -87,15 +98,40 @@ namespace rogue {
 						to.data[t++] = from.data[f++];
 		}
 
+		CharBuf CharBuf::subtract (CharBuf& a, CharBuf& b) {
+			CharBuf sub (0,0);
+			if (a.width == b.width &&
+				a.height == b.height) {
+				sub.updateSize(a.width,a.height);
+				int size = a.width*a.height;
+				for (int i=0;i<size;i++) {
+					sub.data[i] = a.data[i]==b.data[i]?"":string(b.data[i]);
+				}
+			}
+			return sub;
+		}
+
+		void CharBuf::copy (CharBuf& to, CharBuf& from) {
+			if (to.width == from.width &&
+				to.height == from.height) {
+				int size = to.width*to.height;
+				for (int i=0;i<size;i++) {
+					to.data[i] = from.data[i];
+				}
+			}
+		}
+
 		Display::Display ():
-			screen(1,1) {
-			//openFrame();
+			screen(0,0),
+			backScreen(0,0) {
+			openFrame();
 			updateSize();
 			screen.updateSize(width,height);
+			backScreen.updateSize(width,height);
 		}
 
 		Display::~Display () {
-			//closeFrame();
+			closeFrame();
 		}
 
 		int Display::getWidth () {
@@ -141,14 +177,23 @@ namespace rogue {
 
 		void Display::draw () {
 			CharBuf aFilled = CharBuf(10,10);
-			aFilled.fillWith("#");
+			aFilled.fillWith(" ");
+			backScreen.fillWith("-");
 
-			screen.fillWith(".");
+			for (int i=0;i<80;i++) {
+				screen.fillWith(".");
 
-			CharBuf::blit(screen, aFilled, (width-aFilled.getWidth())/2,
-										   (height-aFilled.getHeight())/2);
+				CharBuf::blit(screen, aFilled, (width-aFilled.getWidth())/2+i,
+											   (height-aFilled.getHeight())/2);
 
-			screen.render();
+				// Render only the portion of the screen that was updated
+				CharBuf::subtract (backScreen,screen).economicRender();
+
+				CharBuf::copy(backScreen,screen);
+
+				usleep(100000);
+				cout.flush();
+			}
 		}
 	}
 }
