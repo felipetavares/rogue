@@ -5,7 +5,7 @@ The main goal for project is to offer a roguelike engine with sufficient feature
 
 We are currently in the very early stages of planning and developing, and as we want to develop a game that represents very closely the Tolkien Mitology, we are searching for content creators and 'tolkien geeks'.
 
-![alt tag](https://raw.github.com/felipetavares/rogue/master/logo.png)
+![alt tag](https://db.tt/PLwuTmua)
 The One Ring
 
 How can I help?
