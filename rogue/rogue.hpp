@@ -44,8 +44,12 @@ namespace rogue {
     string getName();
 
     virtual void think () {};
-    virtual Symbol symbol () {};
-    virtual State state () {};
+    virtual Symbol symbol () {
+      return Symbol();
+    };
+    virtual State state () {
+      return State();
+    };
     virtual float weight() = 0;
     virtual void move (Map&, int, int, bool=false);
     virtual bool action (Map&, Action) {return false;};

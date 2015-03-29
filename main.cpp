@@ -267,8 +267,5 @@ int main (void) {
 
   cout << endl;
 
-  interface::Display disp = interface::Display();
-  disp.draw();
-
   return 0;
 }
